@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            background-color: gray;
+        }
+
+        #o {
+            width: 300px;
+            height: 42px;
+        }
+
+        button {
+            background-color: gray;
+            color: blue;
+            font-style: italic;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            background-color: lightgray;
+            color: darkblue;
+        }
+
+        /* Styling the '=' button specifically */
+        #equalsButton {
+            padding: 15px 30px;
+            font-size: 20px;
+            width: 100px;
+            height: 50px;
+        }
+
+        #equationInput {
+            display: none;
+            margin-top: 10px;
+        }
+
+        #equationInput input {
+            width: 200px;
+            padding: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<input id="o" type="text" disabled><br>
+
+<!-- Buttons in the same order you requested -->
+<button onclick="x('1')">1</button>
+<button onclick="x('2')">2</button>
+<button onclick="x('3')">3</button>
+<button onclick="x('4')">4</button>
+<button onclick="x('5')">5</button><br>
+<button onclick="x('6')">6</button>
+<button onclick="x('7')">7</button>
+<button onclick="x('8')">8</button>
+<button onclick="x('9')">9</button>
+<button onclick="x('0')">0</button><br>
+
+<button onclick="x('+')">+</button>
+<button onclick="x('-')">-</button>
+<button onclick="x('*')">x</button>
+<button onclick="toggleEquationInput()">Equation</button><br>
+
+<button onclick="cler()">AC</button>
+<button onclick="x('(')"> ( </button>
+<button onclick="x(')')"> ) </button>
+
+<button onclick="backspace()">&lt;-</button>
+<button onclick="x('3.141592653589793')">π</button><br>
+
+<button onclick="insertAns()">ANS</button>
+<button onclick="x('^')">^</button>
+<button onclick="x('/')">/</button>
+
+<!-- New square root button -->
+<button onclick="insertSquareRoot()">√</button><br>
+<button id="equalsButton" onclick="calc()">=</button>
+<div id="equationInput">
+    <input type="text" id="equation" placeholder="Enter equation (e.g., x + 6 = 9)">
+    <button onclick="solveForX()">Solve</button>
+</div>
+
+<script>
+ let o = document.getElementById("o");
+let lastAnswer = null;
+
+// Function to add value to the input display
+function x(value) {
+    o.value += value;
+}
+
+// Clear the display
+function cler() {
+    o.value = "";
+    lastAnswer = null;
+}
+
+// Function to store the result as the last answer
+function storeAnswer(result) {
+    lastAnswer = result;
+}
+
+// Function to insert the last answer into the display
+function insertAns() {
+    if (lastAnswer !== null) {
+        o.value += lastAnswer;
+    }
+}
+
+// Function for backspace (delete last character)
+function backspace() {
+    o.value = o.value.slice(0, -1);
+}
+
+// Toggle the visibility of the equation input
+function toggleEquationInput() {
+    const equationInput = document.getElementById("equationInput");
+    equationInput.style.display = equationInput.style.display === "none" ? "block" : "none";
+}
+
+// Function to solve for x in the equation ax + b = c
+function solveForX() {
+    const equation = document.getElementById("equation").value.trim();
+
+    // Ensure the equation contains 'x' (the unknown variable)
+    if (!equation.includes('x')) {
+        alert('Please include "x" as the unknown variable in your equation.');
+        return;
+    }
+
+    try {
+        // Regular expression to match equations of the form ax + b = c
+        const regex = /(-?\d*)x\s*([+-]?\s*\d+)\s*=\s*(-?\d+)/;
+        const match = equation.match(regex);
+
+        if (match) {
+            const a = parseFloat(match[1] || 1); // If no coefficient, assume 1 for 'x'
+            const b = parseFloat(match[2]);
+            const c = parseFloat(match[3]);
+
+            // Solve for x: ax + b = c ==> x = (c - b) / a
+            const x = (c - b) / a;
+            o.value = `x = ${x}`;
+        } else {
+            o.value = "Invalid Equation: Only supports ax + b = c form";
+        }
+    } catch (error) {
+        console.error("Error solving the equation:", error);
+        o.value = "Invalid Equation";
+    }
+}
+
+// Function to insert square root symbol (√) into the input field
+function insertSquareRoot() {
+    let input = o.value;
+
+    // Prevent multiple square root signs
+    if (!input.endsWith("√")) {
+        o.value += "√"; // Add the square root sign at the end
+    }
+}
+
+// Function to calculate the expression
+function calc() {
+    try {
+        let expression = o.value;
+
+        // Fix for square roots: Replace "√" with Math.pow(n, 0.5)
+        expression = expression.replace(/√(\d+)/g, (match, p1) => {
+            return `Math.pow(${p1}, 0.5)`; // Convert √n to Math.pow(n, 0.5)
+        });
+
+        // Replace ^ with ** for exponentiation
+        expression = expression.replace(/\^/g, "**");
+
+        // Use eval to evaluate the expression
+        const result = eval(expression);
+        o.value = result;
+        storeAnswer(result);
+    } catch (error) {
+        console.error("Invalid expression:", error);
+        o.value = "Error";
+    }
+}
+
+</script>
+
+</body>
+</html>
