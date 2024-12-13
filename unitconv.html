@@ -1,0 +1,364 @@
+<html>
+<head>
+   <title>Unit Converter by: Mikel Gemayel</title>
+   <style>
+      body {
+         font-family: 'Arial', sans-serif;
+         margin: 0;
+         padding: 0;
+         background-color: #e0f7fa;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+         flex-direction: column;
+      }
+
+      h1 {
+         font-size: 3rem;
+         color: #00796b;
+         text-align: center;
+         margin-bottom: 20px;
+      }
+
+      .button-container {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: center;
+         margin-bottom: 20px;
+      }
+
+      button {
+         background-color: #00796b;
+         color: white;
+         border: none;
+         padding: 15px 25px;
+         font-size: 1.1rem;
+         margin: 10px;
+         cursor: pointer;
+         border-radius: 5px;
+         transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+         background-color: #004d40;
+      }
+
+      #unit-converter {
+         background-color: #ffffff;
+         padding: 30px;
+         border-radius: 10px;
+         box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+         width: 80%;
+         max-width: 600px;
+         text-align: center;
+      }
+
+      input[type="text"], select {
+         padding: 10px;
+         font-size: 1rem;
+         margin: 10px 0;
+         width: 100%;
+         border-radius: 5px;
+         border: 1px solid #ccc;
+      }
+
+      .convert-btn {
+         background-color: #ff9800;
+         color: white;
+         border: none;
+         padding: 15px 25px;
+         font-size: 1.1rem;
+         border-radius: 5px;
+         cursor: pointer;
+         width: 100%;
+         margin-top: 20px;
+         transition: background-color 0.3s ease;
+      }
+
+      .convert-btn:hover {
+         background-color: #f57c00;
+      }
+
+      .result {
+         margin-top: 20px;
+         font-size: 1.5rem;
+         font-weight: bold;
+         color: #00796b;
+      }
+
+      .info-text {
+         font-size: 1rem;
+         color: #00796b;
+         margin-top: 10px;
+      }
+
+      .footer {
+         position: absolute;
+         bottom: 10px;
+         font-size: 0.8rem;
+         color: #004d40;
+      }
+   </style>
+</head>
+<body>
+   <h1>Unit Converter</h1>
+   <div class="button-container">
+      <button onclick="selectUnit('distance')">Distance</button>
+      <button onclick="selectUnit('time')">Time</button>
+      <button onclick="selectUnit('volume')">Volume</button>
+      <button onclick="selectUnit('mass')">Mass</button>
+      <button onclick="selectUnit('area')">Area</button>
+      <button onclick="selectUnit('perimeter')">Perimeter</button>
+   </div>
+
+   <div id="unit-converter">
+      <!-- Dynamic content will be inserted here based on the selected unit type -->
+   </div>
+
+   <!-- Auto-save and Memory Functions -->
+   <div>
+      <button onclick="saveInput()">Save Conversion</button>
+      <button onclick="loadSavedInput()">Load Saved Conversion</button>
+   </div>
+
+   <div class="footer">
+      <button onclick="window.location.href='https://mikelpromax.github.io/calculator./scratch_3.html';">Go to Calculator</button>
+   </div>
+
+   <script>
+      // Handle the selection of different unit types
+      function selectUnit(type) {
+         let content = '';
+         switch (type) {
+            case 'distance':
+               content = `
+                  <h3>Convert Distance</h3>
+                  <input type="text" id="distanceInput" placeholder="Enter distance">
+                  <select id="distanceUnitFrom">
+                     <option value="meters">Meters</option>
+                     <option value="kilometers">Kilometers</option>
+                     <option value="miles">Miles</option>
+                     <option value="feet">Feet</option>
+                  </select>
+                  <span> to </span>
+                  <select id="distanceUnitTo">
+                     <option value="meters">Meters</option>
+                     <option value="kilometers">Kilometers</option>
+                     <option value="miles">Miles</option>
+                     <option value="feet">Feet</option>
+                  </select>
+                  <button class="convert-btn" onclick="convertDistance()">Convert</button>
+                  <p class="result" id="distanceResult"></p>
+               `;
+               break;
+            case 'time':
+               content = `
+                  <h3>Convert Time</h3>
+                  <input type="text" id="timeInput" placeholder="Enter time">
+                  <select id="timeUnitFrom">
+                     <option value="seconds">Seconds</option>
+                     <option value="minutes">Minutes</option>
+                     <option value="hours">Hours</option>
+                     <option value="days">Days</option>
+                  </select>
+                  <span> to </span>
+                  <select id="timeUnitTo">
+                     <option value="seconds">Seconds</option>
+                     <option value="minutes">Minutes</option>
+                     <option value="hours">Hours</option>
+                     <option value="days">Days</option>
+                  </select>
+                  <button class="convert-btn" onclick="convertTime()">Convert</button>
+                  <p class="result" id="timeResult"></p>
+               `;
+               break;
+            case 'volume':
+               content = `
+                  <h3>Convert Volume</h3>
+                  <input type="text" id="volumeInput" placeholder="Enter volume">
+                  <select id="volumeUnitFrom">
+                     <option value="liters">Liters</option>
+                     <option value="milliliters">Milliliters</option>
+                     <option value="cubic-meters">Cubic Meters</option>
+                     <option value="gallons">Gallons</option>
+                  </select>
+                  <span> to </span>
+                  <select id="volumeUnitTo">
+                     <option value="liters">Liters</option>
+                     <option value="milliliters">Milliliters</option>
+                     <option value="cubic-meters">Cubic Meters</option>
+                     <option value="gallons">Gallons</option>
+                  </select>
+                  <button class="convert-btn" onclick="convertVolume()">Convert</button>
+                  <p class="result" id="volumeResult"></p>
+               `;
+               break;
+            case 'mass':
+               content = `
+                  <h3>Convert Mass</h3>
+                  <input type="text" id="massInput" placeholder="Enter mass">
+                  <select id="massUnitFrom">
+                     <option value="grams">Grams</option>
+                     <option value="kilograms">Kilograms</option>
+                     <option value="pounds">Pounds</option>
+                     <option value="ounces">Ounces</option>
+                  </select>
+                  <span> to </span>
+                  <select id="massUnitTo">
+                     <option value="grams">Grams</option>
+                     <option value="kilograms">Kilograms</option>
+                     <option value="pounds">Pounds</option>
+                     <option value="ounces">Ounces</option>
+                  </select>
+                  <button class="convert-btn" onclick="convertMass()">Convert</button>
+                  <p class="result" id="massResult"></p>
+               `;
+               break;
+            case 'area':
+               content = `
+                  <h3>Convert Area</h3>
+                  <input type="text" id="areaInput" placeholder="Enter area">
+                  <select id="areaUnitFrom">
+                     <option value="square-meters">Square Meters</option>
+                     <option value="square-kilometers">Square Kilometers</option>
+                     <option value="square-feet">Square Feet</option>
+                     <option value="square-miles">Square Miles</option>
+                  </select>
+                  <span> to </span>
+                  <select id="areaUnitTo">
+                     <option value="square-meters">Square Meters</option>
+                     <option value="square-kilometers">Square Kilometers</option>
+                     <option value="square-feet">Square Feet</option>
+                     <option value="square-miles">Square Miles</option>
+                  </select>
+                  <button class="convert-btn" onclick="convertArea()">Convert</button>
+                  <p class="result" id="areaResult"></p>
+               `;
+               break;
+            case 'perimeter':
+               content = `
+                  <h3>Convert Perimeter</h3>
+                  <input type="text" id="perimeterInput" placeholder="Enter perimeter">
+                  <select id="perimeterUnitFrom">
+                     <option value="meters">Meters</option>
+                     <option value="kilometers">Kilometers</option>
+                     <option value="miles">Miles</option>
+                     <option value="feet">Feet</option>
+                  </select>
+                  <span> to </span>
+                  <select id="perimeterUnitTo">
+                     <option value="meters">Meters</option>
+                     <option value="kilometers">Kilometers</option>
+                     <option value="miles">Miles</option>
+                     <option value="feet">Feet</option>
+                  </select>
+                  <button class="convert-btn" onclick="convertPerimeter()">Convert</button>
+                  <p class="result" id="perimeterResult"></p>
+               `;
+               break;
+         }
+         document.getElementById('unit-converter').innerHTML = content;
+      }
+
+      // Convert Volume
+      function convertVolume() {
+         const value = parseFloat(document.getElementById('volumeInput').value);
+         const fromUnit = document.getElementById('volumeUnitFrom').value;
+         const toUnit = document.getElementById('volumeUnitTo').value;
+         let result = 0;
+
+         // Conversion logic for volume
+         if (fromUnit === 'liters' && toUnit === 'milliliters') {
+            result = value * 1000;
+         } else if (fromUnit === 'liters' && toUnit === 'gallons') {
+            result = value * 0.264172;
+         } else if (fromUnit === 'liters' && toUnit === 'cubic-meters') {
+            result = value / 1000;
+         }
+         // Add more conversion rules for volume
+
+         document.getElementById('volumeResult').innerText = `Result: ${result} ${toUnit}`;
+      }
+
+      // Convert Mass
+      function convertMass() {
+         const value = parseFloat(document.getElementById('massInput').value);
+         const fromUnit = document.getElementById('massUnitFrom').value;
+         const toUnit = document.getElementById('massUnitTo').value;
+         let result = 0;
+
+         // Conversion logic for mass
+         if (fromUnit === 'grams' && toUnit === 'kilograms') {
+            result = value / 1000;
+         } else if (fromUnit === 'grams' && toUnit === 'pounds') {
+            result = value * 0.00220462;
+         } else if (fromUnit === 'grams' && toUnit === 'ounces') {
+            result = value * 0.035274;
+         }
+         // Add more conversion rules for mass
+
+         document.getElementById('massResult').innerText = `Result: ${result} ${toUnit}`;
+      }
+
+      // Convert Area
+      function convertArea() {
+         const value = parseFloat(document.getElementById('areaInput').value);
+         const fromUnit = document.getElementById('areaUnitFrom').value;
+         const toUnit = document.getElementById('areaUnitTo').value;
+         let result = 0;
+
+         // Conversion logic for area
+         if (fromUnit === 'square-meters' && toUnit === 'square-kilometers') {
+            result = value / 1e6;
+         } else if (fromUnit === 'square-meters' && toUnit === 'square-feet') {
+            result = value * 10.7639;
+         } else if (fromUnit === 'square-meters' && toUnit === 'square-miles') {
+            result = value / 2.59e6;
+         }
+         // Add more conversion rules for area
+
+         document.getElementById('areaResult').innerText = `Result: ${result} ${toUnit}`;
+      }
+
+      // Convert Perimeter
+      function convertPerimeter() {
+         const value = parseFloat(document.getElementById('perimeterInput').value);
+         const fromUnit = document.getElementById('perimeterUnitFrom').value;
+         const toUnit = document.getElementById('perimeterUnitTo').value;
+         let result = 0;
+
+         // Conversion logic for perimeter
+         if (fromUnit === 'meters' && toUnit === 'kilometers') {
+            result = value / 1000;
+         } else if (fromUnit === 'meters' && toUnit === 'miles') {
+            result = value / 1609.34;
+         } else if (fromUnit === 'meters' && toUnit === 'feet') {
+            result = value * 3.28084;
+         }
+         // Add more conversion rules for perimeter
+
+         document.getElementById('perimeterResult').innerText = `Result: ${result} ${toUnit}`;
+      }
+
+      // Auto-save function to store the last input value
+      function saveInput() {
+         const inputValue = document.getElementById('distanceInput') ? document.getElementById('distanceInput').value : null;
+         if (inputValue) {
+            localStorage.setItem('savedConversion', inputValue);
+            alert("Conversion saved!");
+         }
+      }
+
+      // Load saved input
+      function loadSavedInput() {
+         const savedInput = localStorage.getItem('savedConversion');
+         if (savedInput) {
+            alert("Saved input: " + savedInput);
+         } else {
+            alert("No saved input found.");
+         }
+      }
+   </script>
+</body>
+</html>
